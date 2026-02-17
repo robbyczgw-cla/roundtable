@@ -1,6 +1,6 @@
 ---
 name: roundtable
-version: 0.2.1-beta
+version: 0.3.0-beta
 description: "Multi-agent debate council — spawns 3 specialized sub-agents in parallel (Scholar, Engineer, Muse) for Round 1, then optional Round 2 cross-examination to challenge assumptions and strengthen the final synthesis. Configurable models and templates per role."
 tags: [multi-agent, council, parallel, reasoning, research, creative, collaboration, roundtable, debate, cross-examination, templates, logging, security]
 ---
@@ -13,6 +13,9 @@ Spawn 3 specialized sub-agents in parallel to tackle complex problems. You (the 
 
 Activate when the user says any of:
 - `/roundtable <question>` or `/council <question>`
+- `/roundtable setup` (interactive setup wizard)
+- `/roundtable config` (show saved config)
+- `/roundtable help` (command quick reference)
 - "ask the council", "multi-agent", "get multiple perspectives"
 - Or when facing complex, multi-faceted problems that benefit from diverse expertise
 
@@ -53,6 +56,78 @@ User Query
 │  consensus + dissent + confidence│
 └─────────────────────────────────┘
 ```
+
+## Interactive Setup
+
+When the user sends `/roundtable setup`, run a guided, conversational setup and ask **ONE question at a time**.
+Use Telegram-friendly option formatting with inline button style labels (`A)`, `B)`, `C)`).
+Do not ask all steps at once.
+
+### Step 1: Models
+Ask exactly:
+
+"🏛️ Let's set up your Roundtable! First, how do you want to configure models?
+A) 🎯 Single model for all agents (simple, cost-effective)
+B) 🔀 Different models per role (maximum diversity)
+C) 📦 Use a preset (cheap/balanced/premium/diverse)"
+
+Branching:
+- If user picks **A** → ask: which model to use for all roles.
+- If user picks **B** → ask one-by-one for: Scholar model, Engineer model, Muse model.
+- If user picks **C** → ask which preset: `cheap`, `balanced`, `premium`, or `diverse`.
+
+### Step 2: Round 2
+Ask exactly:
+
+"Do you want Round 2 cross-examination by default? (Agents challenge each other's findings — better quality but 2x cost)
+A) ✅ Yes, always (recommended for important decisions)
+B) ⚡ No, quick mode by default (faster, cheaper)
+C) 🤷 Ask me each time"
+
+Interpretation:
+- **A** → `round2: true`
+- **B** → `round2: false`
+- **C** → `round2: "ask"`
+
+### Step 3: Language
+Ask exactly:
+
+"What language should the council respond in?
+A) 🇬🇧 English
+B) 🇩🇪 Deutsch
+C) 🇪🇸 Español
+D) Other (specify)"
+
+Interpretation:
+- **A** → `language: "en"`
+- **B** → `language: "de"`
+- **C** → `language: "es"`
+- **D** → store user-provided language value.
+
+### Step 4: Session Logging
+Ask exactly:
+
+"Should I save council sessions for future reference?
+A) ✅ Yes, save to memory/roundtable/
+B) ❌ No logging
+C) 📁 Custom path (specify)"
+
+Interpretation:
+- **A** → `log_sessions: true`, `log_path: "memory/roundtable"`
+- **B** → `log_sessions: false`
+- **C** → `log_sessions: true` and ask for custom path, then store that path in `log_path`.
+
+### Step 5: Confirmation + Write
+Show a concise summary of all collected choices and ask user to confirm.
+Only after confirmation, write `config.json` in this skill directory.
+
+Required command behavior:
+- `/roundtable config` → Show current `config.json` if it exists, otherwise: `No config found, run /roundtable setup to configure.`
+- `/roundtable help` → Show quick reference:
+  - `/roundtable <question>` — ask the council
+  - `/roundtable setup` — interactive setup wizard
+  - `/roundtable config` — show current config
+  - `/roundtable help` — this help
 
 ## Model Configuration
 
@@ -144,12 +219,18 @@ Template behavior:
 
 ## Execution Steps
 
-### Step 1: Parse & Decompose
-1. Parse model flags (`--scholar`, `--engineer`, `--muse`, `--all`, `--preset`) and optional behavior flags (`--quick`, `--template`).
-2. Read the user's query.
-3. Break it into sub-tasks suited for each agent.
-4. Apply template-specific focus directives (if `--template` is set).
-5. Create focused prompts for each role.
+### Step 1: Parse Commands, Load Config & Decompose
+1. Handle command shortcuts first:
+   - `/roundtable help` → return command quick reference.
+   - `/roundtable config` → show `config.json` if present; otherwise: `No config found, run /roundtable setup to configure.`
+   - `/roundtable setup` → run the interactive setup flow and write `config.json` after confirmation.
+2. For normal council runs (`/roundtable <question>`), parse model flags (`--scholar`, `--engineer`, `--muse`, `--all`, `--preset`) and behavior flags (`--quick`, `--template`).
+3. Before dispatching, check if `config.json` exists in the skill directory. If it does, use those defaults.
+4. Command-line flags (`--all`, `--scholar`, `--engineer`, `--muse`, `--preset`, `--quick`, etc.) ALWAYS override `config.json`.
+5. Read the user's query.
+6. Break it into sub-tasks suited for each agent.
+7. Apply template-specific focus directives (if `--template` is set).
+8. Create focused prompts for each role.
 
 ### Step 2: Dispatch Round 1 (PARALLEL)
 Spawn all 3 sub-agents simultaneously using `sessions_spawn`.
@@ -255,7 +336,7 @@ Present the final answer in this format:
 **Round 2:** [Performed or skipped via --quick]
 
 ---
-<sub>🔍 Scholar (model) · 🧮 Engineer (model) · 🎨 Muse (model) | Roundtable v0.2.0-beta</sub>
+<sub>🔍 Scholar (model) · 🧮 Engineer (model) · 🎨 Muse (model) | Roundtable v0.3.0-beta</sub>
 ```
 
 ## Session Logging

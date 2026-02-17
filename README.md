@@ -66,6 +66,13 @@ clawhub install roundtable
 
 ## Usage
 
+### Commands
+
+- `/roundtable <question>` — ask the council
+- `/roundtable setup` — interactive setup wizard
+- `/roundtable config` — show current config
+- `/roundtable help` — this help
+
 ### Basic
 
 ```bash
@@ -123,7 +130,7 @@ Agreement: Strong consensus on Postgres-first default
 Dissent: Muse noted Mongo can speed early iteration for unstructured domains; Engineer agreed only if eventual consistency is acceptable.
 Round 2: Performed
 
-— Scholar(codex) · Engineer(codex) · Muse(sonnet) | Roundtable v0.2.0-beta
+— Scholar(codex) · Engineer(codex) · Muse(sonnet) | Roundtable v0.3.0-beta
 ```
 
 ---
