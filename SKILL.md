@@ -1,6 +1,6 @@
 ---
 name: roundtable
-version: 0.2.0-beta
+version: 0.2.1-beta
 description: "Multi-agent debate council — spawns 3 specialized sub-agents in parallel (Scholar, Engineer, Muse) for Round 1, then optional Round 2 cross-examination to challenge assumptions and strengthen the final synthesis. Configurable models and templates per role."
 tags: [multi-agent, council, parallel, reasoning, research, creative, collaboration, roundtable, debate, cross-examination, templates, logging, security]
 ---
@@ -58,11 +58,28 @@ User Query
 
 Users can specify models per role. Parse from the command or use defaults.
 
-### Syntax
+### Modes
+
+**Single-model mode** (same model, different perspectives):
 ```
 /roundtable <question>
+/roundtable <question> --all=sonnet
+```
+All 3 agents use the SAME model but with different system prompts and focus areas. This is the simplest setup — the value comes from the **different perspectives**, not necessarily different models.
+
+**Multi-model mode** (different models per role):
+```
 /roundtable <question> --scholar=codex --engineer=codex --muse=sonnet
-/roundtable <question> --all=haiku
+```
+Each agent runs on a different model optimized for its role. This is the power configuration — different models bring genuinely different reasoning patterns.
+
+### Syntax
+```
+/roundtable <question>                                         # defaults (balanced preset)
+/roundtable <question> --all=sonnet                            # single model, 3 perspectives
+/roundtable <question> --scholar=codex --engineer=opus         # mix (unset roles use default)
+/roundtable <question> --preset=premium                        # all opus
+/roundtable <question> --preset=cheap --quick                  # all haiku, skip Round 2
 ```
 
 ### Defaults (if no model specified)
@@ -72,6 +89,8 @@ Users can specify models per role. Parse from the command or use defaults.
 | 🔍 Scholar | `codex` | Cheap, fast, good at web search |
 | 🧮 Engineer | `codex` | Strong at logic & code |
 | 🎨 Muse | `sonnet` | Creative, nuanced writing |
+
+**Note:** Even with `--all=<model>`, each agent still gets its own specialized system prompt. The model is the same but the focus is different — Scholar searches and verifies, Engineer reasons and calculates, Muse thinks creatively. One model, three expert lenses.
 
 ### Model Aliases (use in --flags)
 - `opus` → Claude Opus 4.6
@@ -88,6 +107,7 @@ Users can specify models per role. Parse from the command or use defaults.
 - **`--preset=balanced`** → scholar=codex, engineer=codex, muse=sonnet (default)
 - **`--preset=premium`** → all opus (max quality, high cost)
 - **`--preset=diverse`** → scholar=codex, engineer=sonnet, muse=opus (different perspectives)
+- **`--preset=single`** → all use session's current model (cheapest multi-perspective)
 
 ## Templates
 
