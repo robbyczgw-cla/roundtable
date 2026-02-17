@@ -5,8 +5,7 @@
     "muse_model": "sonnet",
     "round2": true,
     "language": "en",
-    "log_sessions": true,
-    "log_path": "memory/roundtable"
+    "log_sessions": true
   },
   "presets": {
     "default_preset": "balanced"

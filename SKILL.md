@@ -1,6 +1,6 @@
 ---
 name: roundtable
-version: 0.3.0-beta
+version: 0.3.1-beta
 description: "Multi-agent debate council — spawns 3 specialized sub-agents in parallel (Scholar, Engineer, Muse) for Round 1, then optional Round 2 cross-examination to challenge assumptions and strengthen the final synthesis. Configurable models and templates per role."
 tags: [multi-agent, council, parallel, reasoning, research, creative, collaboration, roundtable, debate, cross-examination, templates, logging, security]
 ---
@@ -109,13 +109,13 @@ Ask exactly:
 
 "Should I save council sessions for future reference?
 A) ✅ Yes, save to memory/roundtable/
-B) ❌ No logging
-C) 📁 Custom path (specify)"
+B) ❌ No logging"
 
 Interpretation:
-- **A** → `log_sessions: true`, `log_path: "memory/roundtable"`
+- **A** → `log_sessions: true`, `log_path: "memory/roundtable"` (fixed path, not configurable for security)
 - **B** → `log_sessions: false`
-- **C** → `log_sessions: true` and ask for custom path, then store that path in `log_path`.
+
+**⚠️ SECURITY:** The log path is ALWAYS `memory/roundtable/` relative to the workspace. Custom paths are NOT allowed to prevent path traversal attacks.
 
 ### Step 5: Confirmation + Write
 Show a concise summary of all collected choices and ask user to confirm.
