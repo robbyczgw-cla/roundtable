@@ -130,7 +130,7 @@ Agreement: Strong consensus on Postgres-first default
 Dissent: Muse noted Mongo can speed early iteration for unstructured domains; Engineer agreed only if eventual consistency is acceptable.
 Round 2: Performed
 
-— Scholar(codex) · Engineer(codex) · Muse(sonnet) | Roundtable v0.3.0-beta
+— Scholar(codex) · Engineer(codex) · Muse(sonnet) | Roundtable v0.4.0-beta
 ```
 
 ---
@@ -227,6 +227,8 @@ Round 2: Performed
 - `--muse=<model>`
 - `--all=<model>`
 - `--preset=cheap|balanced|premium|diverse`
+- `--budget=low|medium|high`
+- `--confirm` (ask before dispatch)
 - `--template=code-review|investment|architecture|research|decision`
 - `--quick` (skip Round 2)
 
@@ -234,6 +236,37 @@ Round 2: Performed
 
 - `opus`, `sonnet`, `haiku`, `codex`, `grok`, `kimi`, `minimax`
 - or full provider/model id
+
+---
+
+## Execution Resilience (v0.4.0-beta)
+
+Roundtable now degrades gracefully when agents fail or lag:
+- 90s timeout per sub-agent with synthesis continuation
+- partial completion handling (2/3 responses)
+- fallback guidance when only 0-1 agents respond
+- malformed structured output tolerated and flagged
+- Round 2 failures fall back to Round 1 with explicit notice
+
+## Trust Boundaries
+
+Roundtable enforces three trust layers:
+1. User query is untrusted and wrapped with delimiters
+2. Web results are untrusted (Scholar must filter/verify)
+3. Round 1 findings reused in Round 2 are treated as potentially contaminated and cross-verified
+
+## Budget Controls
+
+Roundtable supports explicit cost controls:
+- pre-dispatch estimate (~3x quick, ~6-10x full)
+- `--budget=low|medium|high`
+- `--confirm` interactive proceed check
+- optional `max_budget` cap in `config.json`
+
+## Flag Precedence
+
+Conflict resolution order:
+`--budget` > `--preset` > `--all` > role flags (`--scholar`, `--engineer`, `--muse`) > `config.json` defaults
 
 ---
 

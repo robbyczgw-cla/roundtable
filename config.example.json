@@ -5,7 +5,8 @@
     "muse_model": "sonnet",
     "round2": true,
     "language": "en",
-    "log_sessions": true
+    "log_sessions": true,
+    "max_budget": "medium"
   },
   "presets": {
     "default_preset": "balanced"
