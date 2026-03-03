@@ -7,6 +7,9 @@ tags: [multi-agent, council, parallel, reasoning, research, creative, collaborat
 
 # Roundtable 🏛️ — Multi-Agent Debate Council
 
+[![Version](https://img.shields.io/badge/version-0.4.0--beta-green)](./package.json)
+[![ClawHub](https://img.shields.io/badge/ClawHub-roundtable-blue)](https://www.clawhub.ai/skills/roundtable)
+
 Spawn 3 specialized sub-agents in parallel to tackle complex problems. You (the main agent) act as **Captain/Coordinator** — decompose the task, dispatch to specialists, run optional cross-examination, and synthesize the final answer.
 
 ## When to Use
