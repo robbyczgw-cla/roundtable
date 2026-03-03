@@ -1,6 +1,6 @@
 ---
 name: roundtable
-version: 0.4.0-beta
+version: 0.4.1
 description: "Multi-agent debate council — spawns 3 specialized sub-agents in parallel (Scholar, Engineer, Muse) for Round 1, then optional Round 2 cross-examination to challenge assumptions and strengthen the final synthesis. Configurable models and templates per role."
 tags: [multi-agent, council, parallel, reasoning, research, creative, collaboration, roundtable, debate, cross-examination, templates, logging, security]
 ---
