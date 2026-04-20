@@ -335,3 +335,7 @@ Each log contains:
 - Timestamp
 
 This creates a useful audit/history trail for major decisions.
+
+## Download History
+
+[![Download History](https://skill-history.com/chart/robbyczgw-cla/roundtable.svg)](https://skill-history.com/robbyczgw-cla/roundtable)
